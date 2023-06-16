@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-class FirstController{
+class HelloWorld{
 
   public home(req:Request, res:Response) {
     return res.json({
@@ -8,4 +8,4 @@ class FirstController{
     });
   } 
 }
-export const firstController = new FirstController();
+export const helloWorld = new HelloWorld();

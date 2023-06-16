@@ -2,7 +2,7 @@
   "name": "tech-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/infrastructure/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon",
