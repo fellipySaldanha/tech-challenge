@@ -2,7 +2,7 @@
   "name": "tech-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/infrastructure/index.ts",
+  "main": ".src/main.ts",
   "scripts": {
     "test": "jest",
     "start:dev": "nodemon",
