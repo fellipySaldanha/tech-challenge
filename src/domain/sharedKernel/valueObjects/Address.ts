@@ -1,11 +1,11 @@
 export default class Address{
-    private readonly street : String;
-    private readonly city : String;
-    private readonly postalCode : Number;
-    private readonly state : String;
-    private readonly country : String;
+    private readonly street : string;
+    private readonly city : string;
+    private readonly postalCode : number;
+    private readonly state : string;
+    private readonly country : string;
 
-    constructor(street:String, city:String, postalCode:Number, state:String, country:String){
+    constructor(street:string, city:string, postalCode:number, state:string, country:string){
         this.street = street;
         this.city = city;
         this.postalCode = postalCode;
