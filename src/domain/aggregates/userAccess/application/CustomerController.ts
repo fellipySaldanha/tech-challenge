@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import HttpServer from "../../../../application/ports/HttpServer";
-import Customer from "../core/entities/Customer";
 import ICustomerRepository from "../core/ports/ICustomerRepository";
 import { ParsedQs } from "qs";
+import CustomerDTO from "../dto/CustomerDTO";
+import Email from '../../../sharedKernel/valueObjects/Email';
+import CPF from '../../../sharedKernel/valueObjects/CPF';
 
 export default class CustomerController{
     private readonly httpServer : HttpServer;
@@ -16,7 +18,7 @@ export default class CustomerController{
 
     async routes(){
         this.httpServer.register('get', '/customer', async (req: Request, resp: Response) => {
-            return await this.getCustomers(req.query);
+            return await this.getCustomers(req.query, resp);
         });
         this.httpServer.register('post', '/customer', async  (req: Request, resp: Response) => {
             return await this.createCustomer(req.body, resp);
@@ -25,76 +27,76 @@ export default class CustomerController{
             return await this.updateCustomer(req.query, req.body, resp);
         });
         this.httpServer.register('delete', '/customer', async (req: Request, resp: Response) => {
-            return await this.deleteCustomer(req.query);
+            return await this.deleteCustomer(req.query, resp);
         });
     }
 
-    async getCustomers(queryParams: ParsedQs): Promise<any>{
+    async getCustomers(queryParams: ParsedQs, response:Response): Promise<any>{
         try {
             if(queryParams.id){
-                return await this.repository.getCustomerById(Number(queryParams.id));
+                const result = await this.repository.getCustomerById(Number(queryParams.id));
+                return response.status(200).json(result);
             }
-            return await this.repository.getCustomers();
-        } catch (error) {
+            const result = await this.repository.getCustomers();
+            return response.status(200).json(result);
+        } catch (error:any) {
             console.log('Error in query Database', error);
-        }   
-    }
-
-    async getCustomerById(id:string): Promise<any>{
-        try {
-            return await this.repository.getCustomerById(Number(id));
-        } catch (error) {
-            console.log('Error in query Database', error);
+            return response.status(400).json({Error:error.message});
         }   
     }
 
     async createCustomer(body:string, response: Response): Promise<any>{
         try {
-            const parsedJson: Customer = body as unknown as Customer;
-            if(Object.keys(parsedJson).length === 0){
-                return response.status(400).json({ error: 'Missing body.' });
-            } else if(!parsedJson.name){
-                return response.status(400).json({ error: 'Missing value: name.' });
-            }
+            const parsedJson: CustomerDTO = body as unknown as CustomerDTO;
             const result = await this.repository.createCustomer(
-                parsedJson.name,
-                parsedJson.email,
-                parsedJson.address,
+                parsedJson.customer_name,
+                parsedJson.customer_email,
+                parsedJson.customer_cpf,
+                parsedJson.is_active
             );
-            return result;
-        } catch (error) {
+            return response.status(200).json(result);;
+        } catch (error:any) {
             console.log('Error create customer',error);
+            return response.status(400).json({Error:error.message});
         }
     }
 
     async updateCustomer(queryParams: ParsedQs, body:string, response:Response): Promise<any>{
         try {
-            const parsedJson: Customer = body as unknown as Customer;
+            const parsedJson: CustomerDTO = body as unknown as CustomerDTO;
+            const cpf = new CPF(parsedJson.customer_cpf);
+            const email = new Email(parsedJson.customer_email);
             if(!queryParams.id){
-                return response.status(400).json({ error: 'Missing parameters. Please provide id' });
-            }else if(!parsedJson.name){
-                return response.status(400).json({ error: 'Missing values. Please provide name' });
+                return response.status(400).json({ Error: 'Missing parameters. Please provide id' });
             }
             const result = await this.repository.updateCustomer(
                 Number(queryParams.id),
-                parsedJson.name,
-                parsedJson.email,
-                parsedJson.address
+                parsedJson.customer_name,
+                email.getEmail(),
+                cpf.getCPF(),
+                parsedJson.is_active
             );
-            return result;
-        } catch (error) {
+            return response.status(200).json(result);
+        } catch (error:any) {
             console.log('Error update customer',error);
+            return response.status(400).json({Error:error.message});
         }
     }
 
-    async deleteCustomer(queryParams: ParsedQs): Promise<any>{
+    async deleteCustomer(queryParams: ParsedQs, response:Response): Promise<any>{
         if(!queryParams.id){
-            throw new Error("Missing parameters. Please provide id");
+            return response.status(400).json({ Error: 'Missing parameters. Please provide id' });
         }
         try {
-            return await this.repository.deleteCustomer(Number(queryParams.id));
-        } catch (error) {
+            const result = await this.repository.deleteCustomer(Number(queryParams.id));
+            if(result?.affectedRows > 0){
+                response.status(200).json({Success:`Row with Id ${queryParams.id} deleted`});
+            } else {
+                response.status(200).json({Success:'No rows were deleted.'});
+            }
+        } catch (error:any) {
             console.log('Error delete customer',error);
+            return response.status(400).json({ Error: error.message });
         }
     }
 }
