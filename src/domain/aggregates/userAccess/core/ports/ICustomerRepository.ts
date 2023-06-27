@@ -1,11 +1,8 @@
-import Address from "../../../../sharedKernel/valueObjects/Address";
-import Email from "../../../../sharedKernel/valueObjects/Email";
-
 export default interface ICustomerRepository {
-    createCustomer(name: string, email: Email, address: Address): Promise<any>;
+    createCustomer(name: string, email: string, cpf: string, active: boolean): Promise<any>;
     getCustomers(): Promise<any>;
     getCustomerById(id:number): Promise<any>;
-    updateCustomer(id:number, name: string, email: Email, address: Address): Promise<any>;
+    updateCustomer(id:number, name: string, email: string, cpf: string, active: boolean): Promise<any>;
     deleteCustomer(id:number): Promise<any>;
 }
   
