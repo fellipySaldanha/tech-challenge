@@ -41,6 +41,12 @@ export default class MySQLCustomerRepository implements ICustomerRepository {
         return await this.commitDB(selectQuery,values);
     }
 
+    async getCustomerByCPF(cpf: number): Promise<any> {
+        const selectQuery = `SELECT * FROM customers WHERE customer_cpf = ?`;
+        const values = [cpf];
+        return await this.commitDB(selectQuery,values);
+    }
+
     async updateCustomer(id:number, name: string, email: string, cpf: string, active: boolean): Promise<any> {
         const updateQuery = `
                 UPDATE customers
