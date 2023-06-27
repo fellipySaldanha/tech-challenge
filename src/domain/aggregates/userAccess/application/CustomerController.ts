@@ -37,6 +37,10 @@ export default class CustomerController{
                 const result = await this.repository.getCustomerById(Number(queryParams.id));
                 return response.status(200).json(result);
             }
+            if(queryParams.cpf){
+                const result = await this.repository.getCustomerByCPF(Number(queryParams.cpf));
+                return response.status(200).json(result);
+            }
             const result = await this.repository.getCustomers();
             return response.status(200).json(result);
         } catch (error:any) {
