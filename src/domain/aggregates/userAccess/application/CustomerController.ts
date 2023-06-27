@@ -48,10 +48,12 @@ export default class CustomerController{
     async createCustomer(body:string, response: Response): Promise<any>{
         try {
             const parsedJson: CustomerDTO = body as unknown as CustomerDTO;
+            const cpf = new CPF(parsedJson.customer_cpf);
+            const email = new Email(parsedJson.customer_email);
             const result = await this.repository.createCustomer(
                 parsedJson.customer_name,
-                parsedJson.customer_email,
-                parsedJson.customer_cpf,
+                email.getEmail(),
+                cpf.getCPF(),
                 parsedJson.is_active
             );
             return response.status(200).json(result);;
