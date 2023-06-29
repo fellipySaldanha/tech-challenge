@@ -1,12 +1,10 @@
 import mysql from 'mysql';
-import * as dotenv from 'dotenv';
 import ICustomerRepository from '../core/ports/ICustomerRepository';
 
 export default class MySQLCustomerRepository implements ICustomerRepository {
     private connection:mysql.Connection;
 
     constructor(){
-        dotenv.config();
         this.connection = mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,

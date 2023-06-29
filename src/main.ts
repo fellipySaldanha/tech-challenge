@@ -3,7 +3,9 @@ import ProductController from "./domain/aggregates/productMaintenance/applicatio
 import MySqlProductRepository from "./domain/aggregates/productMaintenance/infrastructure/MySqlProductRepository";
 import CustomerController from "./domain/aggregates/userAccess/application/CustomerController";
 import MySQLCustomerRepository from "./domain/aggregates/userAccess/infrastructure/MySQLCustomerRepository";
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 const server = new ExpressAdapter();
 const database = new MySQLCustomerRepository();
 const database_product = new MySqlProductRepository();

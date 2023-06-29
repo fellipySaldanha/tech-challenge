@@ -1,7 +1,6 @@
 
 const util = require('util');
 import mysql from 'mysql';
-import * as dotenv from 'dotenv';
 import IProductRepository from '../core/ports/IProductRepository';
 
 export default class MySqlProductRepository implements IProductRepository {
@@ -10,7 +9,6 @@ export default class MySqlProductRepository implements IProductRepository {
    private connection: any;
 
    constructor(){
-        dotenv.config();
         this.client = mysql;
 
         this.connection = this.client.createConnection({
