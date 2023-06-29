@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+  database:
+    image: gabrielpontes/tech-challenge-db:v1.0.1
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: RootPassword
+      MYSQL_DATABASE: DeliverySystem
+      MYSQL_USER: MainUser
+      MYSQL_PASSWORD: MainPassword
+    volumes:
+      - db-volume:/var/lib/mysql
+volumes:
+  db-volume:

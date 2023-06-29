@@ -2,7 +2,7 @@ import CPF from "../../../../sharedKernel/valueObjects/CPF";
 import Email from "../../../../sharedKernel/valueObjects/Email";
 
 export default class Customer {
-    email: Email;;
+    email: Email;
     name: string;
     cpf: CPF;
     isActive: boolean;
