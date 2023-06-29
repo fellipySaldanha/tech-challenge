@@ -29,7 +29,7 @@ export default class MySQLOrderRepository implements IOrderRepository {
     }
 
     async getOrderById(id:number): Promise<any> {
-        const selectQuery = `SELECT * FROM orders WHERE id = ?`;
+        const selectQuery = `SELECT orders.*, customers.customer_name FROM orders JOIN customers ON orders.customer_id = customers.id WHERE orders.id = ?;`;
         const values = [id];
         return await this.commitDB(selectQuery,values);
     }
@@ -43,7 +43,7 @@ export default class MySQLOrderRepository implements IOrderRepository {
                 if(id){
                     results = this.getOrderById(id);
                 }
-                resolve(results);
+                resolve(results[0]);
             });
         });
     }
