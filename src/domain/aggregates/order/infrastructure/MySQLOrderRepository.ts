@@ -18,7 +18,32 @@ export default class MySQLOrderRepository implements IOrderRepository {
     
     async getOrders(): Promise<any> {
         const result = await new Promise((resolve, reject) => {
-            this.connection.query('SELECT orders.*, customers.customer_name FROM orders JOIN customers ON orders.customer_id = customers.id;', (error, results) => {
+            this.connection.query(`SELECT
+            orders.*,
+            customers.customer_name,
+            status_queue_enum.status_queue AS order_status,
+            JSON_ARRAYAGG(
+              JSON_OBJECT(
+                'item', itens.item_name,
+                'qty', order_item.order_item_qtd,
+                'price', itens.item_price
+              )
+            ) AS order_items,
+            order_queue.position
+          FROM
+            orders
+            INNER JOIN status_queue_enum ON orders.id = status_queue_enum.id
+            LEFT JOIN order_item ON orders.id = order_item.order_id
+            LEFT JOIN itens ON order_item.item_id = itens.id
+            LEFT JOIN item_type_enum ON itens.item_type_id = item_type_enum.id
+            LEFT JOIN customers ON orders.customer_id = customers.id
+            LEFT JOIN (
+              SELECT order_id, position
+              FROM order_queue
+              GROUP BY order_id, position
+            ) AS order_queue ON orders.id = order_queue.order_id
+          GROUP BY
+            orders.id, customers.customer_name, status_queue_enum.status_queue, order_queue.position;`, (error, results) => {
                 if (error) {
                     reject(error);
                 }
@@ -29,7 +54,34 @@ export default class MySQLOrderRepository implements IOrderRepository {
     }
 
     async getOrderById(id:number): Promise<any> {
-        const selectQuery = `SELECT orders.*, customers.customer_name FROM orders JOIN customers ON orders.customer_id = customers.id WHERE orders.id = ?;`;
+        const selectQuery = `SELECT
+        orders.*,
+        customers.customer_name,
+        status_queue_enum.status_queue AS order_status,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'item', itens.item_name,
+            'qty', order_item.order_item_qtd,
+            'price', itens.item_price
+          )
+        ) AS order_items,
+        order_queue.position
+      FROM
+        orders
+        INNER JOIN status_queue_enum ON orders.id = status_queue_enum.id
+        LEFT JOIN order_item ON orders.id = order_item.order_id
+        LEFT JOIN itens ON order_item.item_id = itens.id
+        LEFT JOIN item_type_enum ON itens.item_type_id = item_type_enum.id
+        LEFT JOIN customers ON orders.customer_id = customers.id
+        LEFT JOIN (
+          SELECT order_id, position
+          FROM order_queue
+          GROUP BY order_id, position
+        ) AS order_queue ON orders.id = order_queue.order_id
+      WHERE
+        orders.id = ?
+      GROUP BY
+        orders.id, customers.customer_name, status_queue_enum.status_queue, order_queue.position;`;
         const values = [id];
         return await this.commitDB(selectQuery,values);
     }

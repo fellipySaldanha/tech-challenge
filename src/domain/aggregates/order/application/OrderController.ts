@@ -23,10 +23,17 @@ export default class OrderController{
         try {
             if(queryParams.id){
                 const result = await this.repository.getOrderById(Number(queryParams.id));
-                return response.status(200).json(result);
+                return response.status(200).json({...result, order_items: JSON.parse(result.order_items)});
             }
-            const result = await this.repository.getOrders();
-            return response.status(200).json(result);
+            const results = await this.repository.getOrders();
+
+            const orders = results.map((result: any) => {
+                return {
+                ...result,
+                  order_items: JSON.parse(result.order_items),
+                };
+              });
+            return response.status(200).json(orders);
         } catch (error:any) {
             console.log('Error in query Database', error);
             return response.status(400).json({Error:error.message});
