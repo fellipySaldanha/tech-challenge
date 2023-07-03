@@ -81,13 +81,13 @@ export default class MySqlProductRepository implements IProductRepository {
     
     
   }
-  async createProduct(itemType: number, itemName: string,itemPrice: number ): Promise<any>{
+  async createProduct(itemType: number, itemName: string,itemPrice: number,itemDescription:string,itemImgUrl:string ): Promise<any>{
 
     const queryPromise = util.promisify(this.connection.query).bind(this.connection);
     try{
   
-        const query = 'INSERT INTO itens (item_type_id,item_name,item_price) VALUES (?, ?, ?) ';
-        const queryParams = [itemType,itemName,itemPrice];
+        const query = 'INSERT INTO itens (item_type_id,item_name,item_price,item_description,item_img_url) VALUES (?, ?, ?, ?, ?) ';
+        const queryParams = [itemType,itemName,itemPrice,itemDescription,itemImgUrl];
 
         // Executar a consulta SQL
         const results = await queryPromise(query,queryParams);
@@ -101,13 +101,13 @@ export default class MySqlProductRepository implements IProductRepository {
     
   }
 
-  async updateProduct(itemId: number, itemName: string, itemPrice: number , itemType: number): Promise<any>{
+  async updateProduct(itemId: number, itemName: string, itemPrice: number , itemType: number , itemDescription:string,itemImgUrl:string): Promise<any>{
       //const connection = this.startConnection();
 
       const queryPromise = util.promisify(this.connection.query).bind(this.connection);
       try{
-          const query = 'UPDATE itens SET item_type_id = ?,item_name = ?,item_price = ? WHERE id = ?';
-          const queryParams = [itemType,itemName,itemPrice,itemId];
+          const query = 'UPDATE itens SET item_type_id = ?,item_name = ?,item_price = ? , item_description = ?, item_img_url = ? WHERE id = ?';
+          const queryParams = [itemType,itemName,itemPrice,itemDescription,itemImgUrl,itemId];
 
           // Executar a consulta SQL
           const results = await queryPromise(query,queryParams);
