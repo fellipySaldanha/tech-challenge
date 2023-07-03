@@ -28,8 +28,7 @@ export default class MySQLOrderRepository implements IOrderRepository {
                 'qty', order_item.order_item_qtd,
                 'price', itens.item_price
               )
-            ) AS order_items,
-            order_queue.position
+            ) AS order_items
           FROM
             orders
             INNER JOIN status_queue_enum ON orders.id = status_queue_enum.id
@@ -38,12 +37,12 @@ export default class MySQLOrderRepository implements IOrderRepository {
             LEFT JOIN item_type_enum ON itens.item_type_id = item_type_enum.id
             LEFT JOIN customers ON orders.customer_id = customers.id
             LEFT JOIN (
-              SELECT order_id, position
+              SELECT order_id
               FROM order_queue
-              GROUP BY order_id, position
+              GROUP BY order_id
             ) AS order_queue ON orders.id = order_queue.order_id
           GROUP BY
-            orders.id, customers.customer_name, status_queue_enum.status_queue, order_queue.position;`, (error, results) => {
+            orders.id, customers.customer_name, status_queue_enum.status_queue;`, (error, results) => {
                 if (error) {
                     reject(error);
                 }
@@ -64,8 +63,7 @@ export default class MySQLOrderRepository implements IOrderRepository {
             'qty', order_item.order_item_qtd,
             'price', itens.item_price
           )
-        ) AS order_items,
-        order_queue.position
+        ) AS order_items
       FROM
         orders
         INNER JOIN status_queue_enum ON orders.id = status_queue_enum.id
@@ -74,14 +72,14 @@ export default class MySQLOrderRepository implements IOrderRepository {
         LEFT JOIN item_type_enum ON itens.item_type_id = item_type_enum.id
         LEFT JOIN customers ON orders.customer_id = customers.id
         LEFT JOIN (
-          SELECT order_id, position
+          SELECT order_id
           FROM order_queue
-          GROUP BY order_id, position
+          GROUP BY order_id
         ) AS order_queue ON orders.id = order_queue.order_id
       WHERE
         orders.id = ?
       GROUP BY
-        orders.id, customers.customer_name, status_queue_enum.status_queue, order_queue.position;`;
+        orders.id, customers.customer_name, status_queue_enum.status_queue;`;
         const values = [id];
         return await this.commitDB(selectQuery,values);
     }
