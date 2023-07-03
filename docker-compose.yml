@@ -1,7 +1,7 @@
 version: "3.5"
 services:
   database:
-    image: gabrielpontes/tech-challenge-db:v1.0.3
+    image: gabrielpontes/tech-challenge-db:v1.0.4
     ports:
       - "3306:3306"
     environment:
