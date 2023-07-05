@@ -1,72 +1,80 @@
-//const util = require('util');
 import mysql from 'mysql';
 import IOrderQueueRepository from '../core/ports/IOrderQueueRepository';
 
 export default class MySqlOrderQueueRepository implements IOrderQueueRepository {
     private connection:mysql.Connection;
 
-    constructor(){
-        this.connection = mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME
+    constructor(conn?: mysql.Connection){
+        if(conn) {
+            this.connection = conn;
+        } else {
+            this.connection = mysql.createConnection({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
+            });
+            this.connection.connect();
+        }    
+    }
+    beginTransaction(): void {
+        this.connection.beginTransaction();
+      }
+    commit(): void {
+        this.connection.commit();
+    }
+    rollback():void {
+        this.connection.rollback();
+    }
+  
+    private async commitDB(query:string, values:any[]){
+        return new Promise((resolve, reject) => {
+          this.connection.query(query, values, (error, results) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(results);
+            });
         });
-        this.connection.connect();
     }
 
-    async getOrderQueue(orderId?:number): Promise<any> {
-        
+    async getOrderQueue(orderId?:number) {
         const values = [orderId];
         var myQuery = `
-            SELECT oq.order_id, oq.position, sqe.status_queue 
-            FROM order_queue oq
-            LEFT OUTER JOIN status_queue_enum sqe ON oq.status_queue_enum_id = sqe.id`;
+            SELECT OQ.order_id, SQE.status_queue 
+            FROM order_queue OQ
+            LEFT OUTER JOIN orders O ON OQ.order_id = O.id
+            LEFT OUTER JOIN status_queue_enum SQE ON OQ.status_queue_enum_id = SQE.id`;
         if (orderId){
-            myQuery = myQuery + ` WHERE oq.order_id = ?`;
-
+            myQuery = myQuery + ` WHERE OQ.order_id = ?`;
+        } else{
+            myQuery = myQuery + ` WHERE OQ.status_queue_enum_id < 4`; //Order in status = FINALIZADO should not appear on the client queue
         }
+        myQuery = myQuery + ` ORDER BY OQ.status_queue_enum_id DESC, O.order_date ASC`;
 
-        const result = await new Promise((resolve, reject) => {
-            this.connection.query(myQuery, values, (error, results) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(results);
-            });
-        });
+        const result = await this.commitDB(myQuery, values);
         return result;
     }
     
     
-    async getOrderQueuePosition(orderId: number): Promise<any>{
-        const myQuery = `SELECT position, status_queue_enum_id FROM order_queue WHERE order_id = ?`;
+    async getOrderQueueStatus(orderId: number){
+        const myQuery = `SELECT status_queue_enum_id FROM order_queue WHERE order_id = ?`;
         const values = [orderId];
-                
-        const result = await new Promise((resolve, reject) => {
-            this.connection.query(myQuery, values, (error: any, results: unknown) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(results);
-            });
-        });
+        const result = await this.commitDB(myQuery, values);
         return result;
     }
 
-    async updateOrderQueue(orderId: number, position: number, status_queue_enum_id: number): Promise<any>{
-        const update = `UPDATE order_queue SET position = ?, status_queue_enum_id = ? WHERE id = ?`;
-        const values = [position, status_queue_enum_id, orderId];
+    async updateOrderQueue(orderId: number, status_queue_enum_id: number){
+        const update = `UPDATE order_queue SET status_queue_enum_id = ? WHERE order_id = ?`;
+        const values = [status_queue_enum_id, orderId];
+        const result = await this.commitDB(update, values);
+        return result;
+    }
 
-        const result = await new Promise((resolve, reject) => {
-            this.connection.query(update, values, (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results);
-                }
-            });
-        });
+    async add(orderId: number){
+        const insertQuery = 'INSERT INTO order_queue (order_id, position, status_queue_enum_id) VALUES (?, ?, ?)';
+        const values = [orderId, 1, 1];
+        const result = await this.commitDB(insertQuery, values);
         return result;
     }
 }

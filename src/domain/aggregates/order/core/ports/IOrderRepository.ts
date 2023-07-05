@@ -1,5 +1,9 @@
 export default interface IOrderRepository {
-    getOrders(): Promise<any>;
-    getOrderById(id:number): Promise<any>;
-}
-  
+    getOrders(orderId?: number): Promise<any>
+    newOrder(customerId: number, total: number): any;
+    insertOrderItems(items: any): any;
+    addOrderQueue(orderId: number): any;
+    beginTransaction(): void;
+    commit(): void;
+    rollback(): void;
+}  
