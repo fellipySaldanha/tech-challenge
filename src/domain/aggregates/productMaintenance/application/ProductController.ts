@@ -25,7 +25,7 @@ export default class ProductController{
             return resp.status(200).json(result);
         });
         this.httpServer.register('post', '/product', async  (req: Request, resp: Response) => {
-            const result = this.createProduct(req.body, resp);
+            const result = await this.createProduct(req.body, resp);
             return resp.status(200).json(result);
         });  
         this.httpServer.register('patch', '/product', async  (req: Request, resp: Response) => {
@@ -81,9 +81,11 @@ export default class ProductController{
                 parsedJson.itemType,
                 parsedJson.itemName,
                 parsedJson.itemPrice,
+                parsedJson.itemDescription,
+                parsedJson.itemImgUrl
             )
                
-            return  {id: result.insertId , msg: "Product inserted successfully"};
+            return  { id:result.insertId , msg: "Product inserted successfully"};
         }catch(err){
             console.log('Error in query Database', err);
         }
@@ -115,6 +117,8 @@ export default class ProductController{
                 parsedJson.itemName,
                 parsedJson.itemPrice,
                 parsedJson.itemType,
+                parsedJson.itemDescription,
+                parsedJson.itemImgUrl
                 
             )
                

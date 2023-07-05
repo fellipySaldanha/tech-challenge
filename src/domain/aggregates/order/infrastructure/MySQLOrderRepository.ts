@@ -25,7 +25,7 @@ export default class MySQLOrderRepository implements IOrderRepository {
     rollback():void {
       this.connection.rollback();
     }
-    
+
     async getOrders(orderId?: number): Promise<any> {
         const values = [orderId];
         var myQuery = `
