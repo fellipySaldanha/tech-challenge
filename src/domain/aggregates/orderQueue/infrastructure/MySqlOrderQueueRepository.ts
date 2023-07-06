@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 import IOrderQueueRepository from '../core/ports/IOrderQueueRepository';
+import { OrderQueueStatus, OrderWaitingTime } from '../core/entities/OrderQueue';
 
 export default class MySqlOrderQueueRepository implements IOrderQueueRepository {
     private connection:mysql.Connection;
@@ -41,7 +42,7 @@ export default class MySqlOrderQueueRepository implements IOrderQueueRepository 
     async getOrderQueue(orderId?:number) {
         const values = [orderId];
         var myQuery = `
-            SELECT OQ.order_id, SQE.status_queue 
+            SELECT OQ.order_id, SQE.status_queue , OQ.waiting_time 
             FROM order_queue OQ
             LEFT OUTER JOIN orders O ON OQ.order_id = O.id
             LEFT OUTER JOIN status_queue_enum SQE ON OQ.status_queue_enum_id = SQE.id`;
@@ -58,22 +59,22 @@ export default class MySqlOrderQueueRepository implements IOrderQueueRepository 
     
     
     async getOrderQueueStatus(orderId: number){
-        const myQuery = `SELECT status_queue_enum_id FROM order_queue WHERE order_id = ?`;
+        const myQuery = `SELECT status_queue_enum_id, waiting_time FROM order_queue WHERE order_id = ?`;
         const values = [orderId];
         const result = await this.commitDB(myQuery, values);
         return result;
     }
 
-    async updateOrderQueue(orderId: number, status_queue_enum_id: number){
-        const update = `UPDATE order_queue SET status_queue_enum_id = ? WHERE order_id = ?`;
-        const values = [status_queue_enum_id, orderId];
+    async updateOrderQueue(orderId: number, status_queue_enum_id: number, waiting_time: number){
+        const update = `UPDATE order_queue SET status_queue_enum_id = ?, waiting_time = ? WHERE order_id = ?`;
+        const values = [status_queue_enum_id, waiting_time, orderId];
         const result = await this.commitDB(update, values);
         return result;
     }
 
     async add(orderId: number){
-        const insertQuery = 'INSERT INTO order_queue (order_id, position, status_queue_enum_id) VALUES (?, ?, ?)';
-        const values = [orderId, 1, 1];
+        const insertQuery = 'INSERT INTO order_queue (order_id, status_queue_enum_id, waiting_time) VALUES (?, ?, ?)';
+        const values = [orderId, OrderQueueStatus.Recebido, OrderWaitingTime.TempoRecebido];
         const result = await this.commitDB(insertQuery, values);
         return result;
     }

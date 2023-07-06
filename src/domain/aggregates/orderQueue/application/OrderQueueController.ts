@@ -2,6 +2,7 @@ import { Request, Response, query } from "express";
 import HttpServer from "../../../../application/ports/HttpServer";
 import IOrderQueueRepository from "../core/ports/IOrderQueueRepository";
 import { ParsedQs } from "qs";
+import { OrderQueueStatus, OrderWaitingTime } from "../core/entities/OrderQueue";
 
 export default class OrderQueueController {
 
@@ -50,16 +51,23 @@ export default class OrderQueueController {
 
             const myOrder = await this.repository.getOrderQueueStatus(orderId);
             var status_queue_enum_id = myOrder[0].status_queue_enum_id;
+            var waiting_time = myOrder[0].waiting_time;
 
-            //set the status the the next level: 1: Recebido, 2: Em preparação; 3: Pronto; 4: Finalizado
-            if (status_queue_enum_id < 4){
+            //set the status the the next level (see OrderQueueStatus enum): 1: Recebido, 2: Em preparação; 3: Pronto; 4: Finalizado
+            if (status_queue_enum_id != OrderQueueStatus.Finalizado){
                 status_queue_enum_id++;
+                
+                if (status_queue_enum_id == OrderQueueStatus.EmPreparacao){
+                    waiting_time = OrderWaitingTime.TempoEmPreparacao;
+                } else {
+                    waiting_time = OrderWaitingTime.TempoPronto;
+                }
             } else{
                 this.repository.rollback();
                 return response.status(200).json({ WARNING: 'Order has already delivered!' });
             }
 
-            await this.repository.updateOrderQueue(orderId, status_queue_enum_id);
+            await this.repository.updateOrderQueue(orderId, status_queue_enum_id, waiting_time);
             this.repository.commit();
 
             const result = await this.repository.getOrderQueue(orderId);
