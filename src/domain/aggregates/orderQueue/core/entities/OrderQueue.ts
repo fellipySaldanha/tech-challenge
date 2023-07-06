@@ -12,3 +12,16 @@ export default class OrderQueue {
         this.statusQueueId = statusQueueId;
     }
 }
+
+export enum OrderQueueStatus{
+    Recebido = 1,
+    EmPreparacao = 2,
+    Pronto = 3,
+    Finalizado = 4,
+}
+
+export enum OrderWaitingTime{
+    TempoRecebido = 5,
+    TempoEmPreparacao = 4,
+    TempoPronto = 0,
+}
