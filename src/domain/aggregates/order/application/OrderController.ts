@@ -3,6 +3,7 @@ import { ParsedQs } from "qs";
 import HttpServer from "../../../../application/ports/HttpServer";
 import IOrderRepository from "../core/ports/IOrderRepository";
 import OrderDTO from "../dto/OrderDTO";
+import PaymentRepository from "../../payment/infrastructure/PaymentRepository";
 
 export default class OrderController{
     private readonly httpServer : HttpServer;
@@ -47,6 +48,7 @@ export default class OrderController{
 
     async newOrder(body:string, response: Response){
         try{
+            //Proceed with the new order
             const parsedJson: OrderDTO = body as unknown as OrderDTO;
             var customerId = parsedJson.customer_id;
             const total = parsedJson.order_total;
@@ -58,6 +60,13 @@ export default class OrderController{
                 customerId = 1; //Customer Default
             }
             const order_id = await this.repository.newOrder(customerId, total);
+
+            //Simulate the payment process
+            const payment = new PaymentRepository();
+            if ( !payment.makePayment( order_id, total) ){
+                this.repository.rollback();    
+                return response.status(400).json({Error: 'Unable to proceed with the order payment! Please, try again later'});
+            }
 
             //insert order_items
             let queryParams = [];
