@@ -20,7 +20,7 @@ export default class ProductController{
             const result = await this.getProducts(req.query);;
             return resp.status(200).json(result);
         });
-        this.httpServer.register('get', '/category', async  (req: Request, resp: Response) => {
+        this.httpServer.register('get', '/product/findbycategory', async  (req: Request, resp: Response) => {
             const result = await this.getProductsByCategory(req.query);
             return resp.status(200).json(result);
         });
