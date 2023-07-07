@@ -23,7 +23,7 @@ As categorias dos pedidos são:
 
 Integração com gateway de pagamento
 
-#### Acomponhar Pedido
+#### Acompanhar Pedido
 
 Ao confirmar pagamento, o pedido é enviado para preparo. O cliente pode acompanhar o progresso do seu pedido com as seguintes etapas:
 
@@ -42,6 +42,7 @@ Ao confirmar pagamento, o pedido é enviado para preparo. O cliente pode acompan
 
 ## Domain Driven Design
 
+https://miro.com/app/board/uXjVMKvnUGA=/?share_link_id=537199265716
 ![Tech Challenge FASE 01](https://p.ipic.vip/30tsa0.jpg)
 
 ## Modelagem de Dados
