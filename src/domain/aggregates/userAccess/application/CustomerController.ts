@@ -52,13 +52,13 @@ export default class CustomerController{
     async createCustomer(body:string, response: Response): Promise<any>{
         try {
             const parsedJson: CustomerDTO = body as unknown as CustomerDTO;
-            const cpf = new CPF(parsedJson.customer_cpf);
-            const email = new Email(parsedJson.customer_email);
+            const cpf = new CPF(parsedJson.cpf);
+            const email = new Email(parsedJson.email);
             const result = await this.repository.createCustomer(
-                parsedJson.customer_name,
+                parsedJson.name,
                 email.getEmail(),
                 cpf.getCPF(),
-                parsedJson.is_active
+                parsedJson.isActive
             );
             return response.status(200).json(result);;
         } catch (error:any) {
@@ -70,17 +70,17 @@ export default class CustomerController{
     async updateCustomer(queryParams: ParsedQs, body:string, response:Response): Promise<any>{
         try {
             const parsedJson: CustomerDTO = body as unknown as CustomerDTO;
-            const cpf = new CPF(parsedJson.customer_cpf);
-            const email = new Email(parsedJson.customer_email);
+            const cpf = new CPF(parsedJson.cpf);
+            const email = new Email(parsedJson.email);
             if(!queryParams.id){
                 return response.status(400).json({ Error: 'Missing parameters. Please provide id' });
             }
             const result = await this.repository.updateCustomer(
                 Number(queryParams.id),
-                parsedJson.customer_name,
+                parsedJson.name,
                 email.getEmail(),
                 cpf.getCPF(),
-                parsedJson.is_active
+                parsedJson.isActive
             );
             return response.status(200).json(result);
         } catch (error:any) {
