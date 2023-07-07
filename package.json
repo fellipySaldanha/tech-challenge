@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "start:dev": "nodemon",
+    "start": "node dist/main.js",
     "build": "npx tsc"
   },
   "author": "",
