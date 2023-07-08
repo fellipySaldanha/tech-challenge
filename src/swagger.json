@@ -1,337 +1,458 @@
 {
-    "openapi":"3.1.0",
+    "openapi": "3.1.0",
     "info": {
-        "title":"Projeto Lanchonete | Tech Challenge",
+        "title": "Projeto Lanchonete | Tech Challenge",
         "description": "API Documentation",
         "version": "1.0.0"
     },
-    "basePath":"/",
-    "paths":{
-       "/product": {
-        "post":{
-            "tags":["Products"],
-            "requestBody":{
-                "content": {
-                    "application/json":{
-                        "schema":{
-                            "type": "object",
-                            "properties":{
-                                "itemType":{
-                                    "type": "number"
-                                },
-                                "itemName":{
-                                    "type": "string"
-                                },
-                                "itemPrice":{
-                                    "type": "number"
-                                },
-                                "itemDescription":{
-                                    "type":"string"
-                                },
-                                "itemImgUrl":{
-                                    "type":"string"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "responses":{
-                "200":{
-                    "description":"Produto Criado"
-                },
-                "400":{
-                    "description":"Erro ao criar produtos, esta faltando parametros"
-                }
-            }
-        },
-        "get":{
-            "tags":["Products"],
-            "parameters":[{
-               "in":"query",
-               "name":"id",
-               "type": "number"
-            }],
-            "responses":{
-                "200":{
-                    "description":"Produtos encontrados"
-                },
-                "400":{
-                    "description":"Erro ao alterar buscar produtos"
-                }
-                
-            }
-        },
-        "patch":{
-            "tags":["Products"],
-            "parameters":[{
-                "in":"query",
-                "name":"id",
-                "type": "number"
-             }],
-            "requestBody":{
-                "content": {
-                    "application/json":{
-                        "schema":{
-                            "type": "object",
-                            "properties":{
-                                "itemType":{
-                                    "type": "number"
-                                },
-                                "itemName":{
-                                    "type": "string"
-                                },
-                                "itemPrice":{
-                                    "type": "number"
-                                },
-                                "itemDescription":{
-                                    "type":"string"
-                                },
-                                "itemImgUrl":{
-                                    "type":"string"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "responses":{
-                "200":{
-                    "description":"Produto Alterado"
-                },
-                "400":{
-                    "description":"Erro ao alterar produtos, esta faltando parametros"
-                }
-            }
-        },
-        "delete":{
-            "tags":["Products"],
-            "parameters":[{
-               "in":"query",
-               "name":"id",
-               "type": "number"
-            }],
-            "responses":{
-                "200":{
-                    "description":"Produto deletado com sucesso"
-                },
-                "400":{
-                    "description":"Erro ao deletar produto"
-                }
-            }
-        }
-        
-       },
-       "/product/findbycategory":{
-        "get":{
-            "tags":["Products"],
-            "parameters":[{
-               "in":"query",
-               "name":"category",
-               "type": "number"
-            }],
-            "responses":{
-                "200":{
-                    "description":"Produtos encontrados"
-                },
-                "400":{
-                    "description":"Erro ao buscar produtos, esta faltando parametros"
-                }
-            }
-        }
-       },
-       "/customer":{
-         "get":{
-            "tags":["Customers"],
-            "parameters":[{
-                "in":"query",
-                "name":"id",
-                "type": "number"
-             },
-             {
-                "in":"query",
-                "name":"cpf",
-                "type": "string"
-             }],
-             "responses":{
-                "200":{
-                    "description":"Clientes encontrados com sucesso"
-                },
-                "400":{
-                    "description":"Erro ao buscar clientes"
-                }
-            }
-            
-         },
-         "post":{
-            "tags":["Customers"],
-            "requestBody":{
-                "content": {
-                    "application/json":{
-                        "schema":{
-                            "type": "object",
-                            "properties":{
-                                "name":{
-                                    "type": "string"
-                                },
-                                "email":{
-                                    "type": "string"
-                                },
-                                "cpf":{
-                                    "type": "string"
-                                },
-                                "isActive":{
-                                    "type":"boolean"
-                                }                            
-                            }
-                        }
-                    }
-                }
-            },
-            "responses":{
-                "200":{
-                    "description":"Cliente criado com sucesso"
-                },
-                "400":{
-                    "description":"Erro CPF Inválido"
-                }
-            }
-         },
-         "patch":{
-            "tags":["Customers"],
-            "parameters":[{
-                "in":"query",
-                "name":"id",
-                "type": "number"
-             }],
-            "requestBody":{
-                "content": {
-                    "application/json":{
-                        "schema":{
-                            "type": "object",
-                            "properties":{
-                                "name":{
-                                    "type": "string"
-                                },
-                                "email":{
-                                    "type": "string"
-                                },
-                                "cpf":{
-                                    "type": "string"
-                                },
-                                "isActive":{
-                                    "type":"boolean"
-                                }                            
-                            }
-                        }
-                    }
-                }
-            },
-            "responses":{
-                "200":{
-                    "description":"Cliente alterado com sucesso"
-                },
-                "400":{
-                    "description":"Erro CPF Inválido"
-                }
-            }
-         },
-         "delete":{
-            "tags":["Customers"],
-            "parameters":[{
-                "in":"query",
-                "name":"id",
-                "type": "number"
-             }],
-             "responses":{
-                "200":{
-                    "description":"Cliente deletado com sucesso"
-                },
-                "400":{
-                    "description":"Erro ao deletar cliente"
-                }
-            }
-         }
-       },
-       "/order":{
-            "get":{
-                "tags":["Orders"],
-                "parameters":[{
-                    "in":"query",
-                    "name":"id",
-                    "type": "number"
-                }],
-                "responses":{
-                    "200":{
-                        "description":"Pedidos listados com sucesso"
-                    },
-                    "400":{
-                        "description":"Erro ao listar pedidos"
-                    }
-                }
-                
-            },
-            "post":{
-                "tags":["Orders"],
-                "requestBody":{
+    "basePath": "/",
+    "paths": {
+        "/product": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "requestBody": {
                     "content": {
-                        "application/json":{
-                            "schema":{
+                        "application/json": {
+                            "schema": {
                                 "type": "object",
-                                "properties":{
-                                    "order_date":{
-                                        "type": "date"
+                                "properties": {
+                                    "itemType": {
+                                        "type": "number"
                                     },
-                                    "order_total":{
+                                    "itemName": {
                                         "type": "string"
                                     },
-                                    "customerId":{
+                                    "itemPrice": {
+                                        "type": "number"
+                                    },
+                                    "itemDescription": {
                                         "type": "string"
                                     },
-                                    "order_items":{
-                                        "type" : "array"
-                                    }    
+                                    "itemImgUrl": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "example1": {
+                                    "summary": "Exemplo de corpo de requisição",
+                                    "value": {
+                                        "itemType": 1,
+                                        "itemName": "Exemplo de item",
+                                        "itemPrice": 9.99,
+                                        "itemDescription": "Descrição do item",
+                                        "itemImgUrl": "https://example.com/item.jpg"
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-       },
-       "/orderqueue":{
-            "get":{
-                "tags":["OrdersQueue"],
-                "parameters":[{
-                    "in":"query",
-                    "name":"id",
-                    "type": "number"
-                }],
-                "responses":{
-                    "200":{
-                        "description":"Fila de pedidos listadas com sucesso"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produto Criado"
                     },
-                    "400":{
-                        "description":"Erro ao listar fila"
+                    "400": {
+                        "description": "Erro ao criar produtos, esta faltando parametros"
                     }
                 }
-                
             },
-            "patch":{
-                "tags":["OrdersQueue"],
-                "parameters":[{
-                    "in":"query",
-                    "name":"id",
-                    "type": "number"
-                }],
-                "responses":{
-                    "200":{
-                        "description":"Status alterado com sucesso"
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produtos encontrados"
                     },
-                    "400":{
-                        "description":"Faltando parametro , favor prover o ID do pedido"
+                    "400": {
+                        "description": "Erro ao alterar buscar produtos"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "itemType": {
+                                        "type": "number"
+                                    },
+                                    "itemName": {
+                                        "type": "string"
+                                    },
+                                    "itemPrice": {
+                                        "type": "number"
+                                    },
+                                    "itemDescription": {
+                                        "type": "string"
+                                    },
+                                    "itemImgUrl": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "example1": {
+                                    "summary": "Exemplo de corpo de requisição",
+                                    "value": {
+                                        "itemType": 1,
+                                        "itemName": "Exemplo de item",
+                                        "itemPrice": 9.99,
+                                        "itemDescription": "Descrição do item",
+                                        "itemImgUrl": "https://example.com/item.jpg"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produto Alterado"
+                    },
+                    "400": {
+                        "description": "Erro ao alterar produtos, esta faltando parametros"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produto deletado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao deletar produto"
                     }
                 }
             }
-       }
+        },
+        "/product/findbycategory": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produtos encontrados"
+                    },
+                    "400": {
+                        "description": "Erro ao buscar produtos, esta faltando parametros"
+                    }
+                }
+            }
+        },
+        "/customer": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    },
+                    {
+                        "in": "query",
+                        "name": "cpf",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clientes encontrados com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao buscar clientes"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    },
+                                    "isActive": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "example1": {
+                                    "summary": "Exemplo de corpo de requisição",
+                                    "value": {
+                                        "name": "João Fernandes da Cunha",
+                                        "email": "joaofernandes@gmail.com",
+                                        "cpf": "35380188044",
+                                        "isActive": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro CPF Inválido"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "cpf": {
+                                        "type": "string"
+                                    },
+                                    "isActive": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "example1": {
+                                    "summary": "Exemplo de corpo de requisição",
+                                    "value": {
+                                        "name": "João Fernandes da Cunha",
+                                        "email": "joaofernandes@gmail.com",
+                                        "cpf": "35380188044",
+                                        "isActive": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente alterado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro CPF Inválido"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente deletado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao deletar cliente"
+                    }
+                }
+            }
+        },
+        "/order": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pedidos listados com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao listar pedidos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "order_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "order_total": {
+                                        "type": "number"
+                                    },
+                                    "customerId": {
+                                        "type": "string"
+                                    },
+                                    "order_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "item_id": {
+                                                    "type": "number"
+                                                },
+                                                "order_item_qtd": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "example1": {
+                                    "summary": "Exemplo de corpo de requisição",
+                                    "value": {
+                                        "order_total": 50.99,
+                                        "order_items": [
+                                            {
+                                                "order_item_qtd": 1,
+                                                "item_id": 1
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pedido criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao criar pedido"
+                    }
+                }
+            }
+        },
+        "/orderqueue": {
+            "get": {
+                "tags": [
+                    "OrdersQueue"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fila de pedidos listadas com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro ao listar fila"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "OrdersQueue"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status alterado com sucesso"
+                    },
+                    "400": {
+                        "description": "Faltando parametro , favor prover o ID do pedido"
+                    }
+                }
+            }
+        }
     }
 }
