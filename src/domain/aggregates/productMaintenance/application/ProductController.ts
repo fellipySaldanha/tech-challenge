@@ -121,13 +121,10 @@ export default class ProductController{
                 parsedJson.itemImgUrl
                 
             )
-               
-            return  {id: result, msg: "Product changed successfully"};
+            return result;
         }catch(err){
             console.log('Error in update product', err);
         }
-        
-
     }
 
     async deleteProduct(queryParams: ParsedQs): Promise<any>{
