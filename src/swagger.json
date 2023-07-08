@@ -37,6 +37,15 @@
                             },
                             "examples": {
                                 "example1": {
+                                    "summary": "Valores possíveis para o campo <itemType>",
+                                    "value": {
+                                        "1": "Bebida",
+                                        "2": "Lanche",
+                                        "3": "Acompanhamento",
+                                        "4": "Sobremesa"
+                                    }
+                                },
+                                "example2": {
                                     "summary": "Exemplo de corpo de requisição",
                                     "value": {
                                         "itemType": 1,
@@ -87,7 +96,8 @@
                     {
                         "in": "query",
                         "name": "id",
-                        "type": "number"
+                        "type": "number",
+                        "enum": [1,2,3,4]
                     }
                 ],
                 "requestBody": {
@@ -115,6 +125,15 @@
                             },
                             "examples": {
                                 "example1": {
+                                    "summary": "Valores possíveis para o campo <itemType>",
+                                    "value": {
+                                        "1": "Bebida",
+                                        "2": "Lanche",
+                                        "3": "Acompanhamento",
+                                        "4": "Sobremesa"
+                                    }
+                                },
+                                "example2": {
                                     "summary": "Exemplo de corpo de requisição",
                                     "value": {
                                         "itemType": 1,
@@ -167,7 +186,8 @@
                     {
                         "in": "query",
                         "name": "category",
-                        "type": "number"
+                        "type": "number",
+                        "description": "Valores possíveis: [1:Bebida, 2:Lanche, 3:Acompanhamento, 4:Sobremesa]"
                     }
                 ],
                 "responses": {
@@ -359,14 +379,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "order_date": {
-                                        "type": "string",
-                                        "format": "date"
-                                    },
                                     "order_total": {
                                         "type": "number"
                                     },
-                                    "customerId": {
+                                    "customer_id": {
                                         "type": "string"
                                     },
                                     "order_items": {
@@ -387,9 +403,31 @@
                             },
                             "examples": {
                                 "example1": {
-                                    "summary": "Exemplo de corpo de requisição",
+                                    "summary": "Valores possíveis para o campo <item_id>",
+                                    "value": {
+                                        "1": "Bebida",
+                                        "2": "Lanche",
+                                        "3": "Acompanhamento",
+                                        "4": "Sobremesa"
+                                    }
+                                },
+                                "example2": {
+                                    "summary": "Exemplo de corpo de requisição sem identificação do Cliente",
                                     "value": {
                                         "order_total": 50.99,
+                                        "order_items": [
+                                            {
+                                                "order_item_qtd": 1,
+                                                "item_id": 1
+                                            }
+                                        ]
+                                    }
+                                },
+                                "example3": {
+                                    "summary": "Exemplo de corpo de requisição com Cliente identificado",
+                                    "value": {
+                                        "order_total": 50.99,
+                                        "customer_id": 1,
                                         "order_items": [
                                             {
                                                 "order_item_qtd": 1,
