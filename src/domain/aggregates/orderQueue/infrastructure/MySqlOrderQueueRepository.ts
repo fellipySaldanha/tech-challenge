@@ -75,7 +75,7 @@ export default class MySqlOrderQueueRepository implements IOrderQueueRepository 
 
     async add(orderId: number){
         const format_time = this.formatWaitingTime(OrderWaitingTime.TempoRecebido);
-        const insertQuery = 'INSERT INTO order_queue (order_id, status_queue_enum_id, waiting_time) VALUES (?, ?, ?)';
+        const insertQuery = 'INSERT INTO order_queue (order_id, status_queue_enum_id, waiting_time) VALUES (?, ?, TIME( ? ))';
         const values = [orderId, OrderQueueStatus.Recebido, format_time];
         const result = await this.commitDB(insertQuery, values);
         return result;
