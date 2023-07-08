@@ -1,6 +1,6 @@
-import IPaymentRepository from "../core/ports/iPaymentRepository"
+import IPayments from "../core/ports/IPayments";
 
-export default class PaymentRepository implements IPaymentRepository{
+export default class MercadoPago implements IPayments{
 
     constructor(){
         /////////////////////////////////////////
@@ -22,4 +22,3 @@ export default class PaymentRepository implements IPaymentRepository{
         }
     }
 }
-

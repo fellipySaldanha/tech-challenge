@@ -1,17 +1,19 @@
-import { Request, Response, query } from "express";
+import { Request, Response } from "express";
 import { ParsedQs } from "qs";
 import HttpServer from "../../../../application/ports/HttpServer";
 import IOrderRepository from "../core/ports/IOrderRepository";
 import OrderDTO from "../dto/OrderDTO";
-import PaymentRepository from "../../payment/infrastructure/PaymentRepository";
+import PaymentService from '../../payment/services/PaymentService';
 
 export default class OrderController{
     private readonly httpServer : HttpServer;
     private readonly repository : IOrderRepository;
+    private readonly service : PaymentService;
 
-    constructor(httpServer:HttpServer, repository:IOrderRepository){
+    constructor(httpServer:HttpServer, repository:IOrderRepository, service:PaymentService){
         this.repository = repository;
         this.httpServer = httpServer;
+        this.service = service;
         this.routes();
     }
 
@@ -62,8 +64,7 @@ export default class OrderController{
             const order_id = await this.repository.newOrder(customerId, total);
 
             //Simulate the payment process
-            const payment = new PaymentRepository();
-            if ( !payment.makePayment( order_id, total) ){
+            if ( !this.service.payOrder( order_id, total) ){
                 this.repository.rollback();    
                 return response.status(400).json({Error: 'Unable to proceed with the order payment! Please, try again later'});
             }
