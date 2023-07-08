@@ -66,16 +66,23 @@ export default class MySqlOrderQueueRepository implements IOrderQueueRepository 
     }
 
     async updateOrderQueue(orderId: number, status_queue_enum_id: number, waiting_time: number){
-        const update = `UPDATE order_queue SET status_queue_enum_id = ?, waiting_time = ? WHERE order_id = ?`;
-        const values = [status_queue_enum_id, waiting_time, orderId];
+        const format_time = this.formatWaitingTime(waiting_time);
+        const update = `UPDATE order_queue SET status_queue_enum_id = ?, waiting_time = TIME( ? ) WHERE order_id = ?`;
+        const values = [status_queue_enum_id, format_time, orderId];
         const result = await this.commitDB(update, values);
         return result;
     }
 
     async add(orderId: number){
+        const format_time = this.formatWaitingTime(OrderWaitingTime.TempoRecebido);
         const insertQuery = 'INSERT INTO order_queue (order_id, status_queue_enum_id, waiting_time) VALUES (?, ?, ?)';
-        const values = [orderId, OrderQueueStatus.Recebido, OrderWaitingTime.TempoRecebido];
+        const values = [orderId, OrderQueueStatus.Recebido, format_time];
         const result = await this.commitDB(insertQuery, values);
         return result;
+    }
+
+    private formatWaitingTime(waiting_time: number): string {
+        const format_time = '00:0' + waiting_time.toString() + ':00';
+        return format_time;
     }
 }
